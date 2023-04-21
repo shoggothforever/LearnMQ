@@ -16,6 +16,7 @@ func main() {
 	ch, err := conn.Channel()
 	utils.FailOnError(err, "failed to open a channel")
 	defer ch.Close()
+	//不指定队列名字，由rabbitMQ服务器自动创建
 	q, err := ch.QueueDeclare(
 		"", false, false, true, false, nil)
 	utils.FailOnError(err, "failed to declare a queue")

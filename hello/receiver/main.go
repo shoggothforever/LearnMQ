@@ -24,6 +24,7 @@ func main() {
 	var forever chan struct{}
 
 	go func() {
+		//处理消息
 		for d := range msgs {
 			var rec utils.Request
 			json.Unmarshal(d.Body, &rec)
