@@ -1,6 +1,7 @@
 package mes
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -28,4 +29,13 @@ func BodyFrom(args []string) string {
 		s = strings.Join(args[1:], " ")
 	}
 	return s
+}
+func RouterKey(args []string) string {
+	if len(args) != 3 {
+		fmt.Println("please type as follow form :go run xxx.go <router_key>")
+		return "anonymous.infos"
+	} else {
+		fmt.Println("if success, the exchanger will send message to queues whose binding_key are matched with router_key ", args[2])
+		return args[2]
+	}
 }

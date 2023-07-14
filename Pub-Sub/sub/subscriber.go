@@ -16,19 +16,16 @@ func main() {
 	ch, err := conn.Channel()
 	utils.FailOnError(err, "failed to open a channel")
 	defer ch.Close()
+
 	//不指定队列名字，由rabbitMQ服务器自动创建
 	q, err := ch.QueueDeclare(
 		"", false, false, true, false, nil)
 	utils.FailOnError(err, "failed to declare a queue")
 
-	err = ch.Qos(
-		1,     // prefetch count
-		0,     // prefetch size
-		false, // global
-	)
-	utils.FailOnError(err, "Failed to set QoS")
+	err = ch.QueueBind(q.Name, "", "up1", false, nil)
+	utils.FailOnError(err, "Failed to Bind Queue:"+q.Name)
 
-	msgs, err := ch.Consume(q.Name, "dsm", false, false, false, false, nil)
+	msgs, err := ch.Consume(q.Name, "", true, false, false, false, nil)
 
 	utils.FailOnError(err, "Failed to register a consumer")
 
@@ -42,10 +39,9 @@ func main() {
 			fmt.Println(t)
 			time.Sleep(t * time.Second)
 			log.Printf("Done")
-			d.Ack(true)
 		}
 	}()
 
-	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+	log.Printf(" [*] Waiting for radio  messages. To exit press CTRL+C")
 	<-forever
 }
